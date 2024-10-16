@@ -1,11 +1,12 @@
-# Все запросы выполнялись на PostgreSQL PostgreSQL 16.4 (Ubuntu 24.04).
-#
-# Где используется путь к файлам на диске, вместо троеточия, необходимо указать настоящий путь к файлу/файлам. Иначе,будет ошибка выполнения запроса. 
+> [!NOTE]
+> Все запросы выполнялись на PostgreSQL PostgreSQL 16.4 (Ubuntu 24.04).
+> 
+> Где используется путь к файлам на диске, вместо троеточия, необходимо указать настоящий путь к файлу/файлам. Иначе,будет ошибка выполнения запроса. 
 
-######################
-### Решение задания 1.
-######################
-# 1. Создание таблицы 'test_data_contract':
+
+# ***Решение задания 1.***
+
+**1. Создание таблицы 'test_data_contract':**
 
 ```sql
 CREATE TABLE test_data_contract (
@@ -19,7 +20,7 @@ CREATE TABLE test_data_contract (
 );
 ```
 
-# 2. Загрузка данных из файла: test_data_contract.csv в таблицу test_data_contract:
+**2. Загрузка данных из файла: test_data_contract.csv в таблицу test_data_contract:**
 
 ```sql
 \copy test_data_contract FROM '.../data/test_data_contract.csv'
@@ -27,7 +28,7 @@ DELIMITER ','
 CSV HEADER;
 ```
 
-# 3. Создание таблицы 'test_data_contract_conditions':
+**3. Создание таблицы 'test_data_contract_conditions':**
 
 ```sql
 CREATE TABLE test_data_contract_conditions (
@@ -44,7 +45,7 @@ CREATE TABLE test_data_contract_conditions (
 );
 ```
 
-# 4. Загрузка данных из файла: test_data_contract_conditions.csv в таблицу test_data_contract_conditions:
+**4. Загрузка данных из файла: test_data_contract_conditions.csv в таблицу test_data_contract_conditions:**
 
 ```sql
 \copy test_data_contract_conditions FROM '.../data/test_data_contract_conditions.csv'
@@ -52,7 +53,7 @@ DELIMITER ','
 CSV HEADER;
 ```
 
-# 5. Создание таблицы 'test_data_contract_conditions_payment_plan.csv':
+**5. Создание таблицы 'test_data_contract_conditions_payment_plan.csv':**
 
 ```sql
 CREATE TABLE test_data_contract_conditions_payment_plan (
@@ -63,7 +64,7 @@ CREATE TABLE test_data_contract_conditions_payment_plan (
 );
 ```
 
-# 6. Загрузка данных из файла: test_data_contract_conditions_payment_plan.csv в таблицу test_data_contract_conditions_payment_plan:
+**6. Загрузка данных из файла: test_data_contract_conditions_payment_plan.csv в таблицу test_data_contract_conditions_payment_plan:**
 
 ```sql
 \copy test_data_contract_conditions_payment_plan FROM '.../data/test_data_contract_conditions_payment_plan.csv'
@@ -71,7 +72,7 @@ DELIMITER ','
 CSV HEADER;
 ```
 
-# 7. Создание таблицы 'test_data_contract_status.csv':
+**7. Создание таблицы 'test_data_contract_status.csv':**
 
 ```sql
 CREATE TABLE test_data_contract_status (
@@ -81,7 +82,7 @@ CREATE TABLE test_data_contract_status (
 );
 ```
 
-# 8. Загрузка данных из файла: test_data_contract_status.csv в таблицу test_data_contract_status:
+**8. Загрузка данных из файла: test_data_contract_status.csv в таблицу test_data_contract_status:**
 
 ```sql
 \copy test_data_contract_status FROM '.../data/test_data_contract_status.csv'
@@ -89,7 +90,7 @@ DELIMITER ','
 CSV HEADER;
 ```
 
-# 9. Создание таблицы 'v_contracts':
+**9. Создание таблицы 'v_contracts':**
 
 ```sql
 CREATE TABLE v_contracts (
@@ -123,7 +124,7 @@ CREATE TABLE v_contracts (
 );
 ```
 
-# 10. Создание вспомогательной промежуточной таблицы:
+**10. Создание вспомогательной промежуточной таблицы:**
 
 ```sql
 CREATE TABLE v_contracts_temp (
@@ -139,7 +140,7 @@ CREATE TABLE v_contracts_temp (
 );
 ```
 
-# 11. Заполнение вспомогательной промежуточной временной таблицы:
+**11. Заполнение вспомогательной промежуточной временной таблицы:**
 
 ```sql
 INSERT INTO v_contracts_temp 
@@ -160,7 +161,7 @@ WHERE dc.marker_delete = false AND
       dcc.operation_type = 'ЗаключениеДоговора';
 ```
 
-# 12. Создание временных таблиц (CTE).
+**12. Создание временных таблиц (CTE).**
 
 ```sql
 WITH contracts_serial_numbers_is_renewal_has_next AS (
@@ -342,7 +343,7 @@ contracts_delay_days AS (
     FROM contracts_close_dt_is_closed_usage_days AS ccdcud)
 ```
 
-# 13. Заполнение основной таблицы v_contracts.
+**13. Заполнение основной таблицы v_contracts.**
 
 ```sql
 INSERT INTO v_contracts
@@ -386,15 +387,15 @@ LEFT JOIN contracts_dev_days AS cdd ON csnrn.contract_id = cdd.contract_id
 LEFT JOIN contracts_delay_days AS cdds ON csnrn.contract_id = cdds.contract_id;
 ```
 
-# 14. Создание индексов для полей 'customer_id', 'condition_id', в таблице 'v_contracts'.
-# contract_id - является первичным ключем, следовательно, PostgreSQL автоматически создает уникальный индекс (https://www-postgresql-org.translate.goog/docs/current/indexes-unique.html?_x_tr_sl=en&_x_tr_tl=ru&_x_tr_hl=ru&_x_tr_pto=rq).
+**14. Создание индексов для полей 'customer_id', 'condition_id', в таблице 'v_contracts'.**
+contract_id - является первичным ключем, следовательно, PostgreSQL автоматически создает уникальный индекс (https://www-postgresql-org.translate.goog/docs/current/indexes-unique.html?_x_tr_sl=en&_x_tr_tl=ru&_x_tr_hl=ru&_x_tr_pto=rq).
 
 ```sql
 CREATE INDEX customer_id_idx ON v_contracts (customer_id);
 CREATE INDEX condition_id_idx ON v_contracts (condition_id);
 ```
 
-# 15. Cоздание комментариев.
+**15. Cоздание комментариев.**
 
 ```sql
 COMMENT ON TABLE v_contracts IS 'Итоговая таблица (витрина с данными по контрактам).';
@@ -427,7 +428,7 @@ COMMENT ON COLUMN v_contracts.delay_days IS 'Количество дней с д
 COMMENT ON COLUMN v_contracts.has_next IS 'Признак наличия следующего контракта у клиента';
 ```
 
-# 16. Экспорт таблицы v_contracts в файл v_contracts.csv:
+**16. Экспорт таблицы v_contracts в файл v_contracts.csv:**
    
 ```sql
 \copy v_contracts TO '.../data/v_contracts.csv'
@@ -436,11 +437,11 @@ CSV HEADER;
 ```       
 
 
-################################
-### Решение задания 2.
-################################
 
-# 17. Построение запроса.
+# Решение задания 2.
+
+
+**17. Построение запроса.**
 
 
 ```sql
